@@ -41,10 +41,10 @@ export function App() {
         <div className="masthead-inner">
           <a className="wordmark" href="#" onClick={(e) => (e.preventDefault(), go("catchup"))}>
             <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden>
-              <circle cx="16" cy="16" r="15" fill="#c7d5e0" />
-              <path d="M8 20l5-7 4 4 7-8" stroke="#171a21" strokeWidth="3.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <rect x="1" y="1" width="30" height="30" rx="7" fill="var(--accent)" />
+              <path d="M8 20l5-7 4 4 7-8" stroke="#0b0b0c" strokeWidth="3.2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            GAMESHIFT
+            GameShift
           </a>
           <nav className="topnav">
             {NAV.map((n) => (
@@ -71,8 +71,17 @@ export function App() {
       </header>
 
       <div className="page">
-        <Banner id={game.info.id} title={game.info.name}>
-          {current && <span className="nowtag">Now on v{current.version}</span>}
+        <Banner
+          id={game.info.id}
+          title={game.info.name}
+          tag={
+            current && (
+              <span className="livetag">
+                <i aria-hidden /> Live · v{current.version}
+              </span>
+            )
+          }
+        >
           {game.info.tagline && <p className="banner-sub">{game.info.tagline}</p>}
         </Banner>
         {game.info.sample && (

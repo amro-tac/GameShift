@@ -62,10 +62,7 @@ export function DisclosureTag({ disclosure }: { disclosure: Disclosure }) {
   );
 }
 
-/**
- * The green/red box from store discounts, used for a change's size:
- * [ -33% | 1.5% → 1% ].
- */
+/** A change's size and values: [▲ +16.7%  3m → 3.5m], coloured by impact. */
 export function DeltaBox({
   impact,
   pct,
@@ -79,12 +76,16 @@ export function DeltaBox({
   to?: unknown;
   meta?: StatMeta;
 }) {
+  const arrow = impact === "buff" ? "▲" : impact === "nerf" ? "▼" : "◆";
   return (
     <span className={`deltabox deltabox-${impact}`}>
-      <span className="deltabox-pct">{pct !== undefined ? formatPct(pct) : impact === "neutral" ? "±" : ""}</span>
+      <span className="deltabox-pct">
+        {arrow} {pct !== undefined ? formatPct(pct) : ""}
+      </span>
       <span className="deltabox-values">
-        <span className="deltabox-from">{formatValue(from as never, meta)}</span>
-        <span className="deltabox-to">{formatValue(to as never, meta)}</span>
+        <s>{formatValue(from as never, meta)}</s>
+        <span className="deltabox-arrow">→</span>
+        <b>{formatValue(to as never, meta)}</b>
       </span>
     </span>
   );

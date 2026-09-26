@@ -1,17 +1,8 @@
-// Generated "capsule" artwork. Game data rarely comes with images, so every
-// entity gets a deterministic banner built from its id: a colour pulled from a
-// store-like palette, diagonal light streaks, and a large icon for its kind.
+// Generated artwork. Game data rarely comes with images, so every entity gets a
+// deterministic tile built from its id: a dark graph-paper field, a trend line
+// and a large outline icon for its kind, tinted with one colour per entity.
 
-const PALETTE = [
-  [205, 55], // steel blue
-  [190, 50], // teal
-  [220, 45], // indigo
-  [18, 60], // ember
-  [35, 55], // amber
-  [150, 35], // moss
-  [265, 35], // violet
-  [0, 50], // crimson
-];
+const HUES = [150, 45, 20, 280, 190, 340, 90, 0];
 
 function hash(s: string): number {
   let h = 2166136261;
@@ -22,13 +13,12 @@ function hash(s: string): number {
   return h >>> 0;
 }
 
-export function paletteFor(id: string) {
-  const [hue, sat] = PALETTE[hash(id) % PALETTE.length];
-  return { hue, sat };
+export function hueFor(id: string): number {
+  return HUES[hash(id) % HUES.length];
 }
 
 function KindIcon({ kind }: { kind: string }) {
-  const common = { fill: "none", stroke: "currentColor", strokeWidth: 6, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+  const common = { fill: "none", stroke: "currentColor", strokeWidth: 4, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   switch (kind) {
     case "hero":
       return (
@@ -41,7 +31,7 @@ function KindIcon({ kind }: { kind: string }) {
       return (
         <g {...common}>
           <circle cx="50" cy="50" r="26" />
-          <circle cx="50" cy="50" r="4" fill="currentColor" />
+          <circle cx="50" cy="50" r="3" fill="currentColor" />
           <path d="M50 8v22M50 70v22M8 50h22M70 50h22" />
         </g>
       );
@@ -62,40 +52,57 @@ function KindIcon({ kind }: { kind: string }) {
   }
 }
 
-interface CapsuleProps {
+/** A zig-zag "trend" whose shape is seeded by the id. */
+function trend(id: string, w: number, h: number, steps = 7): string {
+  let seed = hash(id);
+  const pts: string[] = [];
+  for (let i = 0; i <= steps; i++) {
+    seed = Math.imul(seed ^ (seed >>> 15), 2246822507) >>> 0;
+    const x = (w / steps) * i;
+    const y = h * (0.3 + 0.5 * ((seed % 1000) / 1000));
+    pts.push(`${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`);
+  }
+  return pts.join(" ");
+}
+
+function Grid({ id, w, h, step }: { id: string; w: number; h: number; step: number }) {
+  return (
+    <>
+      <defs>
+        <pattern id={id} width={step} height={step} patternUnits="userSpaceOnUse">
+          <path d={`M${step} 0H0V${step}`} fill="none" stroke="#fff" strokeOpacity="0.05" />
+        </pattern>
+      </defs>
+      <rect width={w} height={h} fill={`url(#${id})`} />
+    </>
+  );
+}
+
+interface TileProps {
   id: string;
   kind: string;
-  /** Text drawn on the art, like a game logo. Omit for a plain capsule. */
+  /** Text drawn on the art. Omit for a plain tile. */
   title?: string;
   className?: string;
 }
 
-/** A 460×215 (Steam header ratio) banner for an entity. */
-export function Capsule({ id, kind, title, className = "" }: CapsuleProps) {
-  const { hue, sat } = paletteFor(id);
-  const g = `cap-${id}`;
+export function Capsule({ id, kind, title, className = "" }: TileProps) {
+  const hue = hueFor(id);
+  const g = `t-${id.replace(/[^\w-]/g, "")}`;
   return (
-    <div className={`capsule ${className}`} style={{ color: `hsl(${hue} ${sat}% 78%)` }}>
+    <div className={`capsule ${className}`} style={{ ["--tint" as string]: `hsl(${hue} 85% 62%)` }}>
       <svg viewBox="0 0 460 215" preserveAspectRatio="xMidYMid slice" aria-hidden>
         <defs>
-          <linearGradient id={`${g}-bg`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor={`hsl(${hue} ${sat}% 30%)`} />
-            <stop offset="0.6" stopColor={`hsl(${hue + 20} ${sat}% 14%)`} />
-            <stop offset="1" stopColor={`hsl(${hue + 30} ${sat}% 8%)`} />
-          </linearGradient>
-          <radialGradient id={`${g}-glow`} cx="0.78" cy="0.35" r="0.6">
-            <stop offset="0" stopColor={`hsl(${hue} ${sat + 20}% 60%)`} stopOpacity="0.55" />
-            <stop offset="1" stopColor={`hsl(${hue} ${sat}% 40%)`} stopOpacity="0" />
+          <radialGradient id={`${g}-glow`} cx="0.8" cy="0.4" r="0.55">
+            <stop offset="0" stopColor={`hsl(${hue} 85% 55%)`} stopOpacity="0.28" />
+            <stop offset="1" stopColor={`hsl(${hue} 85% 55%)`} stopOpacity="0" />
           </radialGradient>
         </defs>
-        <rect width="460" height="215" fill={`url(#${g}-bg)`} />
+        <rect width="460" height="215" fill="#111113" />
+        <Grid id={`${g}-grid`} w={460} h={215} step={23} />
         <rect width="460" height="215" fill={`url(#${g}-glow)`} />
-        <g opacity="0.08" fill="#fff">
-          <path d="M250 0h40L170 215h-40z" />
-          <path d="M320 0h14L214 215h-14z" />
-          <path d="M380 0h70L330 215h-70z" />
-        </g>
-        <g transform="translate(290 28) scale(1.6)" opacity="0.85">
+        <path d={trend(id, 460, 215)} fill="none" stroke="var(--tint)" strokeOpacity="0.35" strokeWidth="2" />
+        <g transform="translate(300 34) scale(1.45)" style={{ color: "var(--tint)" }}>
           <KindIcon kind={kind} />
         </g>
       </svg>
@@ -104,42 +111,32 @@ export function Capsule({ id, kind, title, className = "" }: CapsuleProps) {
   );
 }
 
-/** Wide hero banner for a game or a patch. */
-export function Banner({ id, title, children }: { id: string; title: string; children?: React.ReactNode }) {
-  const { hue, sat } = paletteFor(id);
-  const g = `ban-${id.replace(/[^\w-]/g, "")}`;
+/** Wide header for a game: graph paper with a rising change line. */
+export function Banner({ id, title, tag, children }: { id: string; title: string; tag?: React.ReactNode; children?: React.ReactNode }) {
+  const g = `b-${id.replace(/[^\w-]/g, "")}`;
+  const line = trend(id, 1000, 300, 12);
   return (
     <div className="banner">
-      <svg viewBox="0 0 940 350" preserveAspectRatio="xMidYMid slice" aria-hidden>
+      <svg viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid slice" aria-hidden>
         <defs>
-          <linearGradient id={`${g}-bg`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor={`hsl(${hue} ${sat}% 26%)`} />
-            <stop offset="0.55" stopColor={`hsl(${hue + 15} ${sat}% 12%)`} />
-            <stop offset="1" stopColor="#0e141c" />
+          <linearGradient id={`${g}-area`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="var(--accent)" stopOpacity="0.18" />
+            <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
           </linearGradient>
-          <radialGradient id={`${g}-sun`} cx="0.8" cy="0.2" r="0.7">
-            <stop offset="0" stopColor={`hsl(${hue - 10} 90% 65%)`} stopOpacity="0.5" />
-            <stop offset="1" stopColor={`hsl(${hue} 60% 40%)`} stopOpacity="0" />
-          </radialGradient>
-          <linearGradient id={`${g}-fade`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0.45" stopColor="#0e141c" stopOpacity="0" />
-            <stop offset="1" stopColor="#0e141c" stopOpacity="0.95" />
+          <linearGradient id={`${g}-fade`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#0b0b0c" stopOpacity="0.95" />
+            <stop offset="0.6" stopColor="#0b0b0c" stopOpacity="0.2" />
+            <stop offset="1" stopColor="#0b0b0c" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <rect width="940" height="350" fill={`url(#${g}-bg)`} />
-        <rect width="940" height="350" fill={`url(#${g}-sun)`} />
-        {/* A skyline of arena towers. */}
-        <g fill={`hsl(${hue + 10} ${sat}% 9%)`} opacity="0.9">
-          <path d="M0 290h60v-70h30v40h40v-90h26v60h50v-40h36v110h44v-150h30v80h40v-50h34v70h46v-120h24v60h56v-30h40v70h46v-100h30v60h40v-40h36v80h52v-60h30v140H0z" />
-        </g>
-        <g opacity="0.07" fill="#fff">
-          <path d="M520 0h80L380 350h-80z" />
-          <path d="M650 0h24L454 350h-24z" />
-          <path d="M760 0h120L660 350H540z" />
-        </g>
-        <rect width="940" height="350" fill={`url(#${g}-fade)`} />
+        <rect width="1000" height="300" fill="#0e0e10" />
+        <Grid id={`${g}-grid`} w={1000} h={300} step={30} />
+        <path d={`${line} L1000 300 L0 300 Z`} fill={`url(#${g}-area)`} />
+        <path d={line} fill="none" stroke="var(--accent)" strokeWidth="2.5" />
+        <rect width="1000" height="300" fill={`url(#${g}-fade)`} />
       </svg>
       <div className="banner-content">
+        {tag}
         <h2 className="banner-title">{title}</h2>
         {children}
       </div>
