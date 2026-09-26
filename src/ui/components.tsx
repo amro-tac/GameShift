@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { formatDate, formatPct, formatValue } from "../core/format";
 import type {
+  CommunityReport,
   Disclosure,
   Impact,
   NetStatChange,
@@ -8,7 +9,6 @@ import type {
   ReconciledChange,
   ReportConfidence,
   StatMeta,
-  CommunityReport,
 } from "../core/types";
 
 export const DISCLOSURE_LABEL: Record<Disclosure, string> = {
@@ -29,98 +29,111 @@ export const NOTE_STATUS: Record<NoteStatus, { label: string; help: string }> = 
   verified: { label: "Verified", help: "Matches the game data." },
   clarified: { label: "Clarified", help: "The note was vague — here are the actual numbers." },
   mismatch: { label: "Incorrect", help: "The numbers in this note don't match the game data." },
-  missing: { label: "Not in data", help: "This change couldn't be found in the game data." },
+  missing: { label: "Not shipped", help: "This change couldn't be found in the game data." },
   unverifiable: { label: "Not tracked", help: "Not something GameShift can check against game data." },
 };
 
-export function Badge({ tone, children, title }: { tone: string; children: ReactNode; title?: string }) {
+/** Store-style verdict for a set of buffs and nerfs ("Mostly Nerfed"). */
+export function verdict(buffs: number, nerfs: number): { label: string; tone: "pos" | "mixed" | "neg" } {
+  const total = buffs + nerfs;
+  if (total === 0) return { label: "No balance changes", tone: "mixed" };
+  const r = buffs / total;
+  if (r >= 0.8) return { label: "Mostly Buffed", tone: "pos" };
+  if (r >= 0.6) return { label: "Leaning Buffed", tone: "pos" };
+  if (r > 0.4) return { label: "Mixed", tone: "mixed" };
+  if (r > 0.2) return { label: "Leaning Nerfed", tone: "neg" };
+  return { label: "Mostly Nerfed", tone: "neg" };
+}
+
+export function Tag({ tone = "plain", children, title }: { tone?: string; children: ReactNode; title?: string }) {
   return (
-    <span className={`badge badge-${tone}`} title={title}>
+    <span className={`tag tag-${tone}`} title={title}>
       {children}
     </span>
   );
 }
 
-export function DisclosureBadge({ disclosure }: { disclosure: Disclosure }) {
+export function DisclosureTag({ disclosure }: { disclosure: Disclosure }) {
   if (disclosure === "documented") return null;
   return (
-    <Badge tone={disclosure} title={DISCLOSURE_HELP[disclosure]}>
+    <Tag tone={disclosure} title={DISCLOSURE_HELP[disclosure]}>
       {DISCLOSURE_LABEL[disclosure]}
-    </Badge>
+    </Tag>
   );
 }
 
-export function ImpactPill({ impact, pct }: { impact: Impact; pct?: number }) {
-  const label = impact === "buff" ? "Buff" : impact === "nerf" ? "Nerf" : "Change";
+/**
+ * The green/red box from store discounts, used for a change's size:
+ * [ -33% | 1.5% → 1% ].
+ */
+export function DeltaBox({
+  impact,
+  pct,
+  from,
+  to,
+  meta,
+}: {
+  impact: Impact;
+  pct?: number;
+  from?: unknown;
+  to?: unknown;
+  meta?: StatMeta;
+}) {
   return (
-    <span className={`impact impact-${impact}`}>
-      {impact === "buff" ? "▲" : impact === "nerf" ? "▼" : "●"} {label}
-      {pct !== undefined && <span className="impact-pct">{formatPct(pct)}</span>}
-    </span>
-  );
-}
-
-export function ConfidenceBadge({ confidence }: { confidence: ReportConfidence }) {
-  const labels = { confirmed: "Confirmed", likely: "Likely", unverified: "Unverified" };
-  return <Badge tone={`conf-${confidence}`}>{labels[confidence]}</Badge>;
-}
-
-export function StatLabel({ stat, meta }: { stat?: string; meta?: StatMeta }) {
-  const label = meta?.label ?? stat ?? "";
-  return <span className="stat-label">{label.charAt(0).toUpperCase() + label.slice(1)}</span>;
-}
-
-export function Delta({ from, to, meta }: { from: unknown; to: unknown; meta?: StatMeta }) {
-  return (
-    <span className="delta">
-      <span className="delta-from">{formatValue(from as never, meta)}</span>
-      <span className="delta-arrow" aria-label="changed to">
-        →
+    <span className={`deltabox deltabox-${impact}`}>
+      <span className="deltabox-pct">{pct !== undefined ? formatPct(pct) : impact === "neutral" ? "±" : ""}</span>
+      <span className="deltabox-values">
+        <span className="deltabox-from">{formatValue(from as never, meta)}</span>
+        <span className="deltabox-to">{formatValue(to as never, meta)}</span>
       </span>
-      <span className="delta-to">{formatValue(to as never, meta)}</span>
     </span>
   );
 }
 
-/** One stat's net change for a returning player, with its patch-by-patch history. */
-export function NetStatRow({ change, meta }: { change: NetStatChange; meta?: StatMeta }) {
+export function ImpactText({ impact }: { impact: Impact }) {
+  if (impact === "neutral") return <span className="impact impact-neutral">Adjusted</span>;
+  return <span className={`impact impact-${impact}`}>{impact === "buff" ? "▲ Buff" : "▼ Nerf"}</span>;
+}
+
+export function ConfidenceTag({ confidence }: { confidence: ReportConfidence }) {
+  const labels = { confirmed: "Confirmed", likely: "Likely", unverified: "Unverified" };
+  return <Tag tone={`conf-${confidence}`}>{labels[confidence]}</Tag>;
+}
+
+export function statName(stat: string | undefined, meta: StatMeta | undefined): string {
+  const label = meta?.label ?? stat ?? "";
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+export function worstDisclosure(history: ReconciledChange[]): Disclosure | undefined {
+  const order: Disclosure[] = ["silent", "mismatch", "vague"];
+  return order.find((d) => history.some((h) => h.disclosure === d));
+}
+
+/** One stat's net change for a returning player, expandable to its history. */
+export function StatLine({ change, meta }: { change: NetStatChange; meta?: StatMeta }) {
   const [open, setOpen] = useState(false);
   const reverted = change.type === "reverted";
   const worst = worstDisclosure(change.history);
   const expandable = change.history.length > 0;
 
   return (
-    <li className={`stat-row ${reverted ? "stat-row-reverted" : ""}`}>
-      <button
-        className="stat-row-main"
-        onClick={() => expandable && setOpen(!open)}
-        aria-expanded={expandable ? open : undefined}
-        disabled={!expandable}
-      >
-        <StatLabel stat={change.stat} meta={meta} />
-        {reverted ? (
-          <span className="delta-to">{formatValue(change.from, meta)}</span>
-        ) : (
-          <Delta from={change.from} to={change.to} meta={meta} />
-        )}
-        <span className="stat-row-tags">
-          {reverted ? (
-            <span className="reverted-note">Changed, then changed back</span>
-          ) : (
-            <ImpactPill impact={change.impact} pct={change.pct} />
-          )}
-          {worst && <DisclosureBadge disclosure={worst} />}
-          {expandable && <span className={`chevron ${open ? "chevron-open" : ""}`} aria-hidden />}
+    <li className={`statline ${reverted ? "statline-reverted" : ""} ${open ? "statline-open" : ""}`}>
+      <button className="statline-main" onClick={() => expandable && setOpen(!open)} aria-expanded={expandable ? open : undefined} disabled={!expandable}>
+        <span className="statline-name">
+          {statName(change.stat, meta)}
+          {worst && <DisclosureTag disclosure={worst} />}
         </span>
+        {reverted ? (
+          <span className="statline-reverted-note">Changed &amp; reverted · {formatValue(change.from, meta)}</span>
+        ) : (
+          <DeltaBox impact={change.impact} pct={change.pct} from={change.from} to={change.to} meta={meta} />
+        )}
+        {expandable && <span className="caret" aria-hidden />}
       </button>
       {open && <History history={change.history} meta={meta} />}
     </li>
   );
-}
-
-export function worstDisclosure(history: ReconciledChange[]): Disclosure | undefined {
-  const order: Disclosure[] = ["silent", "mismatch", "vague"];
-  return order.find((d) => history.some((h) => h.disclosure === d));
 }
 
 export function History({ history, meta }: { history: ReconciledChange[]; meta?: StatMeta }) {
@@ -129,10 +142,13 @@ export function History({ history, meta }: { history: ReconciledChange[]; meta?:
       {history.map((h) => (
         <li key={`${h.version}-${h.stat}`} className={`history-step history-${h.disclosure}`}>
           <span className="history-version">
-            v{h.version} <span className="muted">· {formatDate(h.date)}</span>
+            v{h.version}
+            <span className="dim"> {formatDate(h.date)}</span>
           </span>
-          <Delta from={h.from} to={h.to} meta={meta} />
-          <DisclosureBadge disclosure={h.disclosure} />
+          <span className="history-values">
+            {formatValue(h.from, meta)} <span className="dim">→</span> <b>{formatValue(h.to, meta)}</b>
+          </span>
+          <DisclosureTag disclosure={h.disclosure} />
           {h.disclosure !== "documented" && h.remark && <p className="history-remark">{h.remark}</p>}
         </li>
       ))}
@@ -143,14 +159,14 @@ export function History({ history, meta }: { history: ReconciledChange[]; meta?:
 export function ReportCard({ report }: { report: CommunityReport }) {
   return (
     <article className="report">
-      <header>
-        <ConfidenceBadge confidence={report.confidence} />
-        <span className="muted">v{report.version}</span>
-      </header>
+      <div className="report-meta">
+        <ConfidenceTag confidence={report.confidence} />
+        <span className="dim">Patch v{report.version}</span>
+      </div>
       <h4>{report.title}</h4>
       <p>{report.detail}</p>
       {report.sources.length > 0 && (
-        <p className="sources">
+        <p className="report-sources">
           {report.sources.map((s) => (
             <a key={s.url} href={s.url} target="_blank" rel="noreferrer">
               {s.label} ↗
@@ -162,21 +178,27 @@ export function ReportCard({ report }: { report: CommunityReport }) {
   );
 }
 
-export function Tile({ value, label, tone }: { value: number | string; label: string; tone?: string }) {
-  return (
-    <div className={`tile ${tone ? `tile-${tone}` : ""}`}>
-      <span className="tile-value">{value}</span>
-      <span className="tile-label">{label}</span>
-    </div>
-  );
-}
-
-export function Section({ title, subtitle, children, id }: { title: string; subtitle?: string; children: ReactNode; id?: string }) {
+export function Section({
+  title,
+  subtitle,
+  aside,
+  children,
+  id,
+}: {
+  title: string;
+  subtitle?: string;
+  aside?: ReactNode;
+  children: ReactNode;
+  id?: string;
+}) {
   return (
     <section className="section" id={id}>
       <header className="section-head">
-        <h2>{title}</h2>
-        {subtitle && <p className="muted">{subtitle}</p>}
+        <div>
+          <h2>{title}</h2>
+          {subtitle && <p>{subtitle}</p>}
+        </div>
+        {aside}
       </header>
       {children}
     </section>
