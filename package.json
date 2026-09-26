@@ -1,0 +1,41 @@
+{
+  "name": "gameshift",
+  "version": "1.0.0",
+  "description": "Catch up on every game change you missed — official patch notes, silent changes, and what they really mean.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json",
+    "report": "tsx scripts/report.ts",
+    "ingest:steam": "tsx scripts/ingest-steam.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amro-tac/GameShift.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amro-tac/GameShift/issues"
+  },
+  "homepage": "https://github.com/amro-tac/GameShift#readme",
+  "dependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.2"
+  },
+  "private": true,
+  "type": "module"
+}

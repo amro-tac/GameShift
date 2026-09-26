@@ -1,0 +1,34 @@
+{
+  "version": "1.4",
+  "date": "2026-07-01",
+  "title": "Midseason Patch",
+  "summary": "Community-requested tuning and controller improvements.",
+  "url": "https://example.com/ironvale/patch-1.4",
+  "entries": [
+    {
+      "id": "1.4-1",
+      "category": "balance",
+      "text": "Hailstorm damage 18 → 16."
+    },
+    {
+      "id": "1.4-2",
+      "category": "balance",
+      "text": "Longwatch headshot multiplier restored to 2.5 after community feedback."
+    },
+    {
+      "id": "1.4-3",
+      "category": "balance",
+      "text": "Vex: ability cooldown 12s → 10s."
+    },
+    {
+      "id": "1.4-4",
+      "category": "systems",
+      "text": "Controller aim assist has been tuned."
+    },
+    {
+      "id": "1.4-5",
+      "category": "bugfix",
+      "text": "Improved hit registration against fast-moving targets."
+    }
+  ]
+}

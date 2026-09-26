@@ -1,0 +1,163 @@
+{
+  "version": "1.4",
+  "date": "2026-07-01",
+  "entities": {
+    "vex": {
+      "name": "Vex",
+      "kind": "hero",
+      "stats": {
+        "health": 200,
+        "move_speed": 6.2,
+        "ability_cooldown": 10,
+        "ult_charge": 1800
+      }
+    },
+    "brakka": {
+      "name": "Brakka",
+      "kind": "hero",
+      "stats": {
+        "health": 450,
+        "armor": 150,
+        "move_speed": 5.5,
+        "ability_cooldown": 10,
+        "ult_charge": 2200
+      }
+    },
+    "solenne": {
+      "name": "Solenne",
+      "kind": "hero",
+      "stats": {
+        "health": 225,
+        "move_speed": 6,
+        "ability_cooldown": 10,
+        "ult_charge": 2000,
+        "healing": 36
+      }
+    },
+    "stormcaller": {
+      "name": "Stormcaller",
+      "kind": "weapon",
+      "stats": {
+        "damage": 24,
+        "fire_rate": 660,
+        "magazine": 30,
+        "reload_time": 2.2,
+        "headshot_mult": 1.5,
+        "range": 35,
+        "spread": 1.2
+      }
+    },
+    "emberfang": {
+      "name": "Emberfang",
+      "kind": "weapon",
+      "stats": {
+        "damage": 90,
+        "fire_rate": 70,
+        "magazine": 6,
+        "reload_time": 2.6,
+        "range": 10,
+        "spread": 6
+      }
+    },
+    "longwatch": {
+      "name": "Longwatch",
+      "kind": "weapon",
+      "stats": {
+        "damage": 120,
+        "fire_rate": 40,
+        "magazine": 5,
+        "reload_time": 3.5,
+        "headshot_mult": 2.5,
+        "range": 120
+      }
+    },
+    "aegis_shard": {
+      "name": "Aegis Shard",
+      "kind": "item",
+      "stats": {
+        "cost": 1200,
+        "armor": 40,
+        "duration": 3.5
+      }
+    },
+    "quickstep_boots": {
+      "name": "Quickstep Boots",
+      "kind": "item",
+      "stats": {
+        "cost": 750,
+        "move_speed": 0.6
+      }
+    },
+    "supply_crate": {
+      "name": "Supply Crate",
+      "kind": "system",
+      "aliases": [
+        "supply crates",
+        "crates"
+      ],
+      "stats": {
+        "legendary_chance": 1
+      }
+    },
+    "respawn": {
+      "name": "Respawn",
+      "kind": "system",
+      "stats": {
+        "respawn_time": 9
+      }
+    },
+    "ranked": {
+      "name": "Ranked",
+      "kind": "system",
+      "aliases": [
+        "ranked play"
+      ],
+      "stats": {
+        "lp_win": 25,
+        "lp_loss": 18
+      }
+    },
+    "progression": {
+      "name": "Progression",
+      "kind": "system",
+      "aliases": [
+        "account progression"
+      ],
+      "stats": {
+        "xp_per_match": 850
+      }
+    },
+    "controller": {
+      "name": "Controller",
+      "kind": "system",
+      "aliases": [
+        "controller input"
+      ],
+      "stats": {
+        "aim_assist": 32
+      }
+    },
+    "kiro": {
+      "name": "Kiro",
+      "kind": "hero",
+      "stats": {
+        "health": 175,
+        "move_speed": 7,
+        "ability_cooldown": 11,
+        "ult_charge": 1900
+      }
+    },
+    "hailstorm": {
+      "name": "Hailstorm",
+      "kind": "weapon",
+      "stats": {
+        "damage": 16,
+        "fire_rate": 900,
+        "magazine": 40,
+        "reload_time": 1.9,
+        "range": 18,
+        "spread": 2
+      }
+    }
+  }
+}

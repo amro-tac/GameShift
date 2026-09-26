@@ -1,0 +1,39 @@
+{
+  "version": "1.1",
+  "date": "2026-02-12",
+  "title": "Frostfall",
+  "summary": "A new duelist joins the arena, plus balance tuning for rifles and tanks.",
+  "url": "https://example.com/ironvale/patch-1.1",
+  "entries": [
+    {
+      "id": "1.1-1",
+      "category": "content",
+      "text": "New hero: Kiro, a high-mobility duelist."
+    },
+    {
+      "id": "1.1-2",
+      "category": "balance",
+      "text": "Stormcaller: damage 24 → 22."
+    },
+    {
+      "id": "1.1-3",
+      "category": "balance",
+      "text": "Brakka health increased from 400 to 450."
+    },
+    {
+      "id": "1.1-4",
+      "category": "balance",
+      "text": "Solenne's ability cooldown has been adjusted."
+    },
+    {
+      "id": "1.1-5",
+      "category": "bugfix",
+      "text": "Fixed a bug where the Longwatch scope glint was not visible to enemies."
+    },
+    {
+      "id": "1.1-6",
+      "category": "bugfix",
+      "text": "Fixed a crash when leaving a custom lobby during countdown."
+    }
+  ]
+}

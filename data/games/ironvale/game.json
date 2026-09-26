@@ -1,0 +1,175 @@
+{
+  "id": "ironvale",
+  "name": "Ironvale Arena",
+  "sample": true,
+  "tagline": "Fictional hero shooter bundled as sample data",
+  "kinds": {
+    "hero": "Heroes",
+    "weapon": "Weapons",
+    "item": "Items",
+    "system": "Systems & Economy"
+  },
+  "statMeta": {
+    "damage": {
+      "label": "damage",
+      "better": "higher"
+    },
+    "fire_rate": {
+      "label": "fire rate",
+      "unit": "rpm",
+      "better": "higher",
+      "aliases": [
+        "rate of fire"
+      ]
+    },
+    "magazine": {
+      "label": "magazine size",
+      "better": "higher",
+      "aliases": [
+        "magazine",
+        "mag size"
+      ]
+    },
+    "reload_time": {
+      "label": "reload time",
+      "unit": "s",
+      "better": "lower",
+      "aliases": [
+        "reload speed"
+      ]
+    },
+    "headshot_mult": {
+      "label": "headshot multiplier",
+      "unit": "x",
+      "better": "higher"
+    },
+    "range": {
+      "label": "effective range",
+      "unit": "m",
+      "better": "higher",
+      "aliases": [
+        "range",
+        "falloff range"
+      ]
+    },
+    "spread": {
+      "label": "spread",
+      "unit": "°",
+      "better": "lower",
+      "aliases": [
+        "bullet spread"
+      ]
+    },
+    "health": {
+      "label": "health",
+      "unit": "HP",
+      "better": "higher",
+      "aliases": [
+        "max health",
+        "hp"
+      ]
+    },
+    "armor": {
+      "label": "armor",
+      "better": "higher"
+    },
+    "move_speed": {
+      "label": "movement speed",
+      "unit": "m/s",
+      "better": "higher",
+      "aliases": [
+        "move speed",
+        "movespeed"
+      ]
+    },
+    "ability_cooldown": {
+      "label": "ability cooldown",
+      "unit": "s",
+      "better": "lower",
+      "aliases": [
+        "cooldown"
+      ]
+    },
+    "ult_charge": {
+      "label": "ultimate cost",
+      "unit": "pts",
+      "better": "lower",
+      "aliases": [
+        "ult cost",
+        "ultimate charge"
+      ]
+    },
+    "healing": {
+      "label": "healing per second",
+      "unit": "HP/s",
+      "better": "higher",
+      "aliases": [
+        "healing",
+        "heal rate"
+      ]
+    },
+    "cost": {
+      "label": "cost",
+      "unit": "gold",
+      "better": "lower",
+      "aliases": [
+        "price"
+      ]
+    },
+    "duration": {
+      "label": "duration",
+      "unit": "s",
+      "better": "higher"
+    },
+    "respawn_time": {
+      "label": "respawn time",
+      "unit": "s",
+      "better": "lower",
+      "aliases": [
+        "respawn timer"
+      ]
+    },
+    "xp_per_match": {
+      "label": "XP per match",
+      "unit": "XP",
+      "better": "higher",
+      "aliases": [
+        "match XP"
+      ]
+    },
+    "lp_win": {
+      "label": "LP per win",
+      "unit": "LP",
+      "better": "higher",
+      "aliases": [
+        "LP gains"
+      ]
+    },
+    "lp_loss": {
+      "label": "LP lost per loss",
+      "unit": "LP",
+      "better": "lower",
+      "aliases": [
+        "LP loss",
+        "LP losses"
+      ]
+    },
+    "aim_assist": {
+      "label": "aim assist strength",
+      "unit": "%",
+      "better": "neutral",
+      "aliases": [
+        "aim assist"
+      ]
+    },
+    "legendary_chance": {
+      "label": "legendary drop chance",
+      "unit": "%",
+      "better": "higher",
+      "aliases": [
+        "legendary chance",
+        "legendary drop rate"
+      ]
+    }
+  }
+}

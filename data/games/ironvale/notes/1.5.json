@@ -1,0 +1,34 @@
+{
+  "version": "1.5",
+  "date": "2026-08-26",
+  "title": "Season 3: Undertow",
+  "summary": "A new support hero and the return of a fan favourite.",
+  "url": "https://example.com/ironvale/patch-1.5",
+  "entries": [
+    {
+      "id": "1.5-1",
+      "category": "content",
+      "text": "New hero: Maren, a tidal support."
+    },
+    {
+      "id": "1.5-2",
+      "category": "content",
+      "text": "Twin Sickles are back with a full rework."
+    },
+    {
+      "id": "1.5-3",
+      "category": "systems",
+      "text": "Ranked: LP loss reduced to 15."
+    },
+    {
+      "id": "1.5-4",
+      "category": "balance",
+      "text": "Stormcaller magazine size 30 → 32."
+    },
+    {
+      "id": "1.5-5",
+      "category": "ui",
+      "text": "New kill-feed icons for Season 3 weapons."
+    }
+  ]
+}

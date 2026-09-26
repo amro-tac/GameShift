@@ -1,0 +1,34 @@
+{
+  "version": "1.2",
+  "date": "2026-03-20",
+  "title": "Balance Update",
+  "summary": "Weapon and economy tuning ahead of the season finale.",
+  "url": "https://example.com/ironvale/patch-1.2",
+  "entries": [
+    {
+      "id": "1.2-1",
+      "category": "balance",
+      "text": "Stormcaller fire rate increased to 640 rpm."
+    },
+    {
+      "id": "1.2-2",
+      "category": "balance",
+      "text": "Emberfang: reload time 3.0s → 2.6s."
+    },
+    {
+      "id": "1.2-3",
+      "category": "balance",
+      "text": "Quickstep Boots cost reduced."
+    },
+    {
+      "id": "1.2-4",
+      "category": "systems",
+      "text": "Ranked: LP per win 22 → 25."
+    },
+    {
+      "id": "1.2-5",
+      "category": "ui",
+      "text": "Scoreboard now shows each player's current Ranked tier."
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "r-1.1-mm",
+    "version": "1.1",
+    "category": "systems",
+    "confidence": "likely",
+    "title": "Matchmaking weighs party size more heavily",
+    "detail": "Solo players report noticeably fewer matches against full 5-stacks since Frostfall. Not in the notes; consistent across several independent tracking threads.",
+    "sources": [
+      {
+        "label": "Community thread (example)",
+        "url": "https://example.com/ironvale/community/matchmaking"
+      }
+    ]
+  },
+  {
+    "id": "r-1.2-crate",
+    "version": "1.2",
+    "category": "systems",
+    "confidence": "confirmed",
+    "entity": "supply_crate",
+    "title": "Legendary drops from Supply Crates dropped by a third",
+    "detail": "A 20,000-crate community sample shows the legendary rate falling from ~1.5% to ~1.0%, matching the datamined value. Patch notes were silent.",
+    "sources": [
+      {
+        "label": "Drop-rate tracker (example)",
+        "url": "https://example.com/ironvale/drop-tracker"
+      }
+    ]
+  },
+  {
+    "id": "r-1.4-hitreg",
+    "version": "1.4",
+    "category": "bugfix",
+    "confidence": "confirmed",
+    "title": "Hit registration: server now rewinds up to 150 ms",
+    "detail": "Developer comment clarifies that 'improved hit registration' means lag compensation was raised from 100 ms to 150 ms, so high-ping shots count more often.",
+    "sources": [
+      {
+        "label": "Developer comment (example)",
+        "url": "https://example.com/ironvale/dev-comment"
+      }
+    ]
+  },
+  {
+    "id": "r-1.5-tick",
+    "version": "1.5",
+    "category": "systems",
+    "confidence": "unverified",
+    "title": "Ranked servers may be running at a higher tick rate",
+    "detail": "Netgraph captures suggest 64 Hz updates in Ranked matches (previously 30 Hz). Not yet confirmed by the developers.",
+    "sources": [
+      {
+        "label": "Netcode analysis (example)",
+        "url": "https://example.com/ironvale/tickrate"
+      }
+    ]
+  }
+]
